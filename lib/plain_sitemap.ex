@@ -17,10 +17,12 @@ defmodule PlainSitemap do
     quote location: :keep do
       @default_output_dir "priv/static"
       @output_file_name "sitemap.xml.gz"
+
       def render do
         PlainSitemap.Generator.flush
         unquote(block)
-        current_datetime = Timex.DateTime.now
+        current_datetime = Timex.now
+
         doc(:urlset, unquote(__MODULE__).urlset_attributes, Enum.map(PlainSitemap.Generator.urlset, fn({path, opts}) ->
           element(:url, %{}, [
             element(:loc, "#{opts[:host] || @default_host}#{path}"),
@@ -30,6 +32,7 @@ defmodule PlainSitemap do
           ])
         end))
       end
+
       def refresh do
         {:ok, _} = Application.ensure_all_started(@app)
         generator = (Application.get_env(:plain_sitemap, :generator) || raise "sitemap generator is not defined. see README.md")
@@ -64,11 +67,11 @@ defmodule PlainSitemap do
 
   def timezone_string(%Ecto.DateTime{} = datetime) do
     {:ok, dump} = Ecto.DateTime.dump(datetime)
-    Timex.DateTime.from(dump)
+    Timex.from(dump)
     |> timezone_string
   end
 
-  def timezone_string(%Timex.DateTime{} = datetime) do
+  def timezone_string(datetime) do
     datetime |> Timex.format!("%FT%T%:z", :strftime)
   end
 

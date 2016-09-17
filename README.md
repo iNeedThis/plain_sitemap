@@ -85,4 +85,4 @@ Similar to [sitemap_generator](https://github.com/kjvarga/sitemap_generator#supp
 
 ## Datetime support
 
-PlainSitemap support `Ecto.DateTime` and `Timex.DateTime`.
+PlainSitemap support `Ecto.DateTime` and `Timex`.
